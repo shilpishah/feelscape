@@ -29,7 +29,7 @@ const MoodPopup: React.FC<MoodPopupProps> = ({ visible, onClose }) => {
 
     const fetchEmotion = async () => {
       try {
-        const res = await fetch("/api/get-emotion"); // adjust endpoint
+        const res = await fetch("http://localhost:8000/emotion");
         if (!res.ok) throw new Error("Failed to fetch emotion");
         const data = await res.json();
         setEmotion(data.emotion); // assumes { emotion: "Happy" }
