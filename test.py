@@ -129,7 +129,7 @@ async def create_music_from_images(files: List[UploadFile] = File(..., descripti
     # Define the text prompt for the model
     prompt = """
     You are given a list of images. Select one image at random from the provided list.
-    Take specific note of the emotions that the landscape is representing. 
+    Take specific note of the emotions that the landscape is representing.
     Please limit your description to no more than 1 sentence.
     """
     messages_content.append({
@@ -163,3 +163,8 @@ async def create_music_from_images(files: List[UploadFile] = File(..., descripti
         "image_description_prompt": generated_text,
         "music_generation_details": music_generation_response
     })
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
