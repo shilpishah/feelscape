@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Compass, Menu } from "lucide-react";
+import { Compass, Menu, X, Brain, HeartPulse, Puzzle, Music, HelpCircle } from "lucide-react";
 
 const FeelscapeStart: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showLandscape, setShowLandscape] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // ← HERE IT IS
 
   const handleGetStarted = () => {
     if (loading) return;
@@ -122,13 +123,36 @@ const FeelscapeStart: React.FC = () => {
       {showLandscape && (
         <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-pink-300 to-pink-400 z-20 animate-fadeIn">
           {/* Hamburger Menu (top-right) */}
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 z-50 flex flex-col items-end space-y-3">
+            {/* The hamburger/x button */}
             <button
-              className="p-3 rounded-full bg-white/30 backdrop-blur-sm hover:bg-white/50 transition"
-              aria-label="Open menu"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
+                        hover:bg-white/30 hover:scale-110 transition-all duration-300 
+                        hover:shadow-lg hover:shadow-white/25 flex items-center justify-center"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
-              <Menu className="w-6 h-6 text-white" />
+              {menuOpen ? (
+                <X className="w-5 h-5 text-white transition-transform duration-300" />
+              ) : (
+                <Menu className="w-5 h-5 text-white transition-transform duration-300" />
+              )}
             </button>
+
+            {/* THE EXPANDABLE MENU */}
+            <div
+              className={`flex flex-col items-center space-y-3 transition-all duration-500 ease-out origin-top-right ${
+                menuOpen 
+                  ? 'opacity-100 scale-100 translate-y-0' 
+                  : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
+              }`}
+            >
+              <MenuIcon icon={Brain} label="Mood" />
+              <MenuIcon icon={HeartPulse} label="Biometrics" />
+              <MenuIcon icon={Puzzle} label="Insights" />
+              <MenuIcon icon={Music} label="Audio" />
+              <MenuIcon icon={HelpCircle} label="Help" />
+            </div>
           </div>
 
           {/* Landscape placeholder center */}
@@ -243,6 +267,37 @@ const TypingText: React.FC = () => {
   );
 };
 
+const MenuIcon: React.FC<{ icon: React.ComponentType<any>; label: string }> = ({ 
+  icon: Icon, 
+  label 
+}) => {
+  const [isHovered, setIsHovered] = useState(false);
 
+  return (
+    <div className="relative group">
+      <button
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
+                   hover:bg-white/30 hover:scale-110 transition-all duration-300 
+                   hover:shadow-lg hover:shadow-white/25"
+        aria-label={label}
+      >
+        <Icon className="w-5 h-5 text-white" />
+      </button>
+      
+      {/* Tooltip */}
+      <div
+        className={`absolute top-1/2 right-full mr-3 transform -translate-y-1/2 
+                    bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 
+                    rounded-lg whitespace-nowrap transition-all duration-200 ${
+          isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none'
+        }`}
+      >
+        {label}
+      </div>
+    </div>
+  );
+};
 
 export default FeelscapeStart;
