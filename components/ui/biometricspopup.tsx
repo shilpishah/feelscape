@@ -11,7 +11,7 @@ interface BiometricsPopupProps {
 
 interface HRData {
   status: string;
-  heart_rate?: number;
+  heart_rate?: number[]; // now expecting an array
 }
 
 const MAX_POINTS = 30;
@@ -22,7 +22,6 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
   const popupRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ offsetX: 0, offsetY: 0, dragging: false });
 
-  // Fade in/out
   useEffect(() => {
     if (visible) setShow(true);
     else {
@@ -40,10 +39,11 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
         const res = await fetch("http://localhost:8000/biometrics");
         const json: HRData = await res.json();
 
-        if (json.status === "ok" && json.heart_rate !== undefined) {
+        if (json.status === "ok" && json.heart_rate && json.heart_rate.length > 0) {
+          const latestHR = json.heart_rate[json.heart_rate.length - 1];
           const now = new Date();
           setHrHistory(prev => {
-            const updated = [...prev, { time: now.toLocaleTimeString(), hr: json.heart_rate }];
+            const updated = [...prev, { time: now.toLocaleTimeString(), hr: latestHR }];
             return updated.slice(-MAX_POINTS);
           });
         }
@@ -52,7 +52,6 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
       }
     };
 
-    // Initial fetch + interval
     fetchHR();
     const interval = setInterval(fetchHR, 2000);
     return () => clearInterval(interval);
@@ -95,13 +94,10 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
       style={{ top: "100px", left: "100px", position: "fixed" }}
       className="z-50 p-4 w-96 rounded-2xl backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg cursor-grab active:cursor-grabbing overflow-auto max-h-[70vh]"
     >
-      {/* Header */}
       <div className="flex justify-between items-center mb-3 select-none">
         <div className="flex items-center gap-2">
           <HeartPulse className="w-5 h-5 text-white/90" />
-          <h2 className="text-white/90 font-bold text-lg drop-shadow-md">
-            Heart Rate
-          </h2>
+          <h2 className="text-white/90 font-bold text-lg drop-shadow-md">Heart Rate</h2>
         </div>
         <button
           onClick={(e) => {
@@ -114,7 +110,6 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
         </button>
       </div>
 
-      {/* Heart rate chart */}
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={hrHistory}>
