@@ -74,24 +74,6 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
-// Validate ../../app/api/generate-music/route.ts
-{
-  type __IsExpected<Specific extends RouteHandlerConfig<"/api/generate-music">> = Specific
-  const handler = {} as typeof import("../../app/api/generate-music/route.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../app/api/run-python/route.ts
-{
-  type __IsExpected<Specific extends RouteHandlerConfig<"/api/run-python">> = Specific
-  const handler = {} as typeof import("../../app/api/run-python/route.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 
 
 

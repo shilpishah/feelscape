@@ -148,7 +148,9 @@
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
+    --color-red-200: oklch(88.5% 0.062 18.334);
     --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-teal-300: oklch(85.5% 0.138 181.071);
     --color-teal-400: oklch(77.7% 0.152 181.912);
     --color-blue-100: oklch(93.2% 0.032 255.585);
@@ -440,6 +442,9 @@
   .mr-1 {
     margin-right: calc(var(--spacing) * 1);
   }
+  .mr-2 {
+    margin-right: calc(var(--spacing) * 2);
+  }
   .mr-3 {
     margin-right: calc(var(--spacing) * 3);
   }
@@ -680,6 +685,9 @@
   .overflow-y-auto {
     overflow-y: auto;
   }
+  .rounded {
+    border-radius: 0.25rem;
+  }
   .rounded-3xl {
     border-radius: var(--radius-3xl);
   }
@@ -707,6 +715,12 @@
   }
   .border-input {
     border-color: var(--input);
+  }
+  .border-red-400\/30 {
+    border-color: color-mix(in srgb, oklch(70.4% 0.191 22.216) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-red-400) 30%, transparent);
+    }
   }
   .border-teal-300\/5 {
     border-color: color-mix(in srgb, oklch(85.5% 0.138 181.071) 5%, transparent);
@@ -778,6 +792,12 @@
     background-color: var(--primary);
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--primary) 20%, transparent);
+    }
+  }
+  .bg-red-500\/20 {
+    background-color: color-mix(in srgb, oklch(63.7% 0.237 25.331) 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-red-500) 20%, transparent);
     }
   }
   .bg-secondary {
@@ -982,6 +1002,9 @@
   .p-1 {
     padding: calc(var(--spacing) * 1);
   }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
+  }
   .p-3 {
     padding: calc(var(--spacing) * 3);
   }
@@ -1129,8 +1152,8 @@
   .text-primary-foreground {
     color: var(--primary-foreground);
   }
-  .text-red-400 {
-    color: var(--color-red-400);
+  .text-red-200 {
+    color: var(--color-red-200);
   }
   .text-secondary-foreground {
     color: var(--secondary-foreground);
@@ -1145,6 +1168,12 @@
     color: color-mix(in srgb, #fff 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-white) 50%, transparent);
+    }
+  }
+  .text-white\/70 {
+    color: color-mix(in srgb, #fff 70%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-white) 70%, transparent);
     }
   }
   .text-white\/80 {
@@ -1271,9 +1300,6 @@
   .select-none {
     -webkit-user-select: none;
     user-select: none;
-  }
-  .running {
-    animation-play-state: running;
   }
   .placeholder\:text-muted-foreground {
     &::placeholder {

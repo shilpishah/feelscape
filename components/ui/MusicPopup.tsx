@@ -2,10 +2,17 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { X, Music, Play, Pause, Download } from "lucide-react";
-import { SunoService, SunoClip } from "@/lib/suno-service";
+import {
+  X,
+  Music,
+  Play,
+  Pause,
+  Download,
+  Image as ImageIcon,
+} from "lucide-react";
+
+import { MusicService, MusicClip } from "@/lib/music-service";
 
 interface MusicPopupProps {
   visible: boolean;
@@ -13,14 +20,13 @@ interface MusicPopupProps {
 }
 
 const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
-  // if (!visible) return null;
-
   const popupRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ offsetX: 0, offsetY: 0, dragging: false });
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedClips, setGeneratedClips] = useState<SunoClip[]>([]);
+  const [generatedClips, setGeneratedClips] = useState<MusicClip[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [imageDescription, setImageDescription] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
   const [audioElements, setAudioElements] = useState<{
     [key: string]: HTMLAudioElement;
@@ -61,27 +67,37 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     setIsGenerating(true);
     setGeneratedClips([]);
     setError(null);
+    setImageDescription("");
 
     try {
-      const clips = await SunoService.generateAndWaitForCompletion(
-        {
-          prompt: "Create a calming ambient track with gentle synthesizers",
-          tags: "ambient, calm, relaxing",
-          makeInstrumental: false,
-        },
-        (clips) => {
-          if (clips) setGeneratedClips(clips);
+      // Get the current landscape image
+      const imageFile = await MusicService.getCurrentLandscapeImage();
+      if (!imageFile) {
+        throw new Error("Failed to get current landscape image");
+      }
+
+      // Generate music from image using the service
+      const result = await MusicService.generateMusicFromImage(
+        imageFile,
+        (clips, progress, description) => {
+          if (description) {
+            setImageDescription(description);
+          }
+          setGeneratedClips(clips);
         },
       );
-      setGeneratedClips(clips);
+
+      setGeneratedClips(result.clips);
+      setImageDescription(result.description);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error("Music generation error:", err);
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const togglePlayPause = (clip: SunoClip) => {
+  const togglePlayPause = (clip: MusicClip) => {
     if (!clip.audio_url) return;
     const clipId = clip.id;
 
@@ -114,7 +130,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     }
   };
 
-  const handleDownload = async (clip: SunoClip) => {
+  const handleDownload = async (clip: MusicClip) => {
     if (!clip.audio_url || isDownloading[clip.id]) return;
     setIsDownloading((prev) => ({ ...prev, [clip.id]: true }));
 
@@ -130,16 +146,16 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error(err);
+      console.error("Download error:", err);
     } finally {
       setIsDownloading((prev) => ({ ...prev, [clip.id]: false }));
     }
   };
 
-  const getProgressPercentage = (clipId: string, clip?: SunoClip) => {
+  const getProgressPercentage = (clipId: string, clip?: MusicClip) => {
     const pos = currentTime[clipId] || 0;
     const dur = clip
-      ? clip.metadata.duration || duration[clipId]
+      ? clip.metadata?.duration || duration[clipId]
       : duration[clipId];
     if (!dur || dur <= 0) return 0;
     return Math.min(100, Math.max(0, (pos / dur) * 100));
@@ -163,7 +179,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
         <div className="flex items-center gap-2">
           <Music className="w-5 h-5 text-white/90" />
           <h2 className="text-white/90 font-bold text-lg tracking-wide drop-shadow-md">
-            Currently playing...
+            Music from Landscape
           </h2>
         </div>
         <button
@@ -177,20 +193,28 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
         </button>
       </div>
 
-      {/* Input */}
+      {/* Generate Button */}
       <div className="px-6 pb-4 flex flex-col gap-3">
         <Button
           onClick={handleGenerate}
           disabled={isGenerating}
-          className="w-full"
+          className="w-full bg-white/20 hover:bg-white/30 text-white border border-white/30"
         >
-          {isGenerating ? "Generating..." : "Generate Song"}
+          <ImageIcon className="w-4 h-4 mr-2" />
+          {isGenerating
+            ? "Generating Music..."
+            : "Generate Music from Current Scene"}
         </Button>
       </div>
 
       {/* Generated Clips */}
       <div className="px-6 pb-4 flex flex-col gap-3 overflow-y-auto max-h-[250px]">
-        {error && <p className="text-red-400 drop-shadow-md">{error}</p>}
+        {error && (
+          <Card className="p-3 bg-red-500/20 border border-red-400/30">
+            <p className="text-red-200 text-sm drop-shadow-md">{error}</p>
+          </Card>
+        )}
+
         {generatedClips.map((clip) => (
           <Card
             key={clip.id}
@@ -201,7 +225,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
                 {clip.title || "Untitled"}
               </h3>
               <span className="text-white/50 text-xs">
-                {clip.metadata.duration
+                {clip.metadata?.duration
                   ? `${Math.round(clip.metadata.duration)}s`
                   : ""}
               </span>
@@ -215,7 +239,11 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
               </div>
             )}
             <div className="flex gap-2">
-              <Button onClick={() => togglePlayPause(clip)} className="flex-1">
+              <Button
+                onClick={() => togglePlayPause(clip)}
+                className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                disabled={!clip.audio_url}
+              >
                 {isPlaying[clip.id] ? (
                   <>
                     <Pause className="w-4 h-4 mr-1 text-white/90" />
@@ -230,8 +258,8 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
               </Button>
               <Button
                 onClick={() => handleDownload(clip)}
-                className="flex-1"
-                disabled={isDownloading[clip.id]}
+                className="flex-1 bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                disabled={isDownloading[clip.id] || !clip.audio_url}
               >
                 {isDownloading[clip.id] ? (
                   "Downloading..."
