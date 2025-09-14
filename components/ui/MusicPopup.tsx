@@ -12,7 +12,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 
-import { MusicService, MusicClip } from "@/lib/music-service";
+import { SunoService, SunoClip } from "@/lib/suno-service";
 
 interface MusicPopupProps {
   visible: boolean;
@@ -24,7 +24,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
   const drag = useRef({ offsetX: 0, offsetY: 0, dragging: false });
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedClips, setGeneratedClips] = useState<MusicClip[]>([]);
+  const [generatedClips, setGeneratedClips] = useState<SunoClip[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [imageDescription, setImageDescription] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
@@ -71,13 +71,13 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
 
     try {
       // Get the current landscape image
-      const imageFile = await MusicService.getCurrentLandscapeImage();
+      const imageFile = await SunoService.getCurrentLandscapeImage();
       if (!imageFile) {
         throw new Error("Failed to get current landscape image");
       }
 
       // Generate music from image using the service
-      const result = await MusicService.generateMusicFromImage(
+      const result = await SunoService.generateMusicFromImage(
         imageFile,
         (clips, progress, description) => {
           if (description) {
@@ -97,7 +97,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     }
   };
 
-  const togglePlayPause = (clip: MusicClip) => {
+  const togglePlayPause = (clip: SunoClip) => {
     if (!clip.audio_url) return;
     const clipId = clip.id;
 
@@ -130,7 +130,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     }
   };
 
-  const handleDownload = async (clip: MusicClip) => {
+  const handleDownload = async (clip: SunoClip) => {
     if (!clip.audio_url || isDownloading[clip.id]) return;
     setIsDownloading((prev) => ({ ...prev, [clip.id]: true }));
 
@@ -152,10 +152,10 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     }
   };
 
-  const getProgressPercentage = (clipId: string, clip?: MusicClip) => {
+  const getProgressPercentage = (clipId: string, clip?: SunoClip) => {
     const pos = currentTime[clipId] || 0;
     const dur = clip
-      ? clip.metadata?.duration || duration[clipId]
+      ? clip.metadata.duration || duration[clipId]
       : duration[clipId];
     if (!dur || dur <= 0) return 0;
     return Math.min(100, Math.max(0, (pos / dur) * 100));
