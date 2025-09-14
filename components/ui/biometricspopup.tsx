@@ -115,14 +115,17 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
       {/* Heart rate chart */}
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={hrHistory}>
-            <CartesianGrid strokeDasharray="3 3" stroke="white/20" />
-            <XAxis dataKey="time" stroke="white" />
-            <YAxis stroke="white" domain={['dataMin - 5', 'dataMax + 5']} />
-            <Tooltip contentStyle={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: 'white' }} />
-            <Line type="monotone" dataKey="hr" stroke="#f87171" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
+            <LineChart data={hrHistory}>
+                <CartesianGrid strokeDasharray="3 3" stroke="white/20" />
+                <XAxis dataKey="time" stroke="white" />
+                <YAxis 
+                stroke="white" 
+                domain={([dataMin, dataMax]) => [dataMin - 5, dataMax + 5]} 
+                />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: 'white' }} />
+                <Line type="monotone" dataKey="hr" stroke="#f87171" strokeWidth={2} dot={false} />
+            </LineChart>
+            </ResponsiveContainer>
       </div>
     </div>
   );
