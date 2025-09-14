@@ -34,27 +34,20 @@ def get_emotion():
 
 @app.route("/biometrics", methods=["GET"])
 def get_biometrics():
-    # lock to safely read EEG buffer
+    # Lock to safely read heart rate
     with detector.data_lock:
-        if len(detector.eeg_buffer) == 0:
+        if not hasattr(detector, "hr_buffer") or len(detector.hr_buffer) == 0:
             return jsonify({"status": "no_data"})
-        # Convert deque to numpy array (shape: 4 x n_samples)
-        raw_data = np.array(detector.eeg_buffer).T
-
-    # preprocess EEG
-    processed = detector.preprocessor.preprocess_eeg(raw_data)
+        
+        # Get the most recent heart rate
+        latest_hr = detector.hr_buffer[-1]
 
     return jsonify({
         "status": "ok",
-        "raw_eeg": raw_data.tolist(),
-        "processed_eeg": {
-            "raw_windows": processed["raw_windows"].tolist(),
-            "power_features": processed["power_features"].tolist(),
-            "statistical_features": processed["statistical_features"].tolist(),
-            "combined_features": processed["combined_features"].tolist()
-        },
+        "heart_rate": latest_hr,
         "latest_emotion": latest_emotion["emotion"]
     })
+
 
 if __name__ == "__main__":
     print(f"Starting emotion detector on OSC port {detector.osc_port}")

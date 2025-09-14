@@ -2,26 +2,23 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { X, HeartPulse } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 
 interface BiometricsPopupProps {
   visible: boolean;
   onClose: () => void;
 }
 
-interface BiometricsData {
-  raw_eeg: number[][];
-  processed_eeg: {
-    raw_windows: number[][][];
-    power_features: number[][];
-    statistical_features: number[][];
-    combined_features: number[][];
-  };
-  latest_emotion: string | null;
+interface HRData {
+  heart_rate: number;
+  latest_emotion?: string | null; // optional, not used
 }
+
+const MAX_POINTS = 30; // number of points to show in the chart
 
 const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) => {
   const [show, setShow] = useState(visible);
-  const [data, setData] = useState<BiometricsData | null>(null);
+  const [hrHistory, setHrHistory] = useState<{ time: string; hr: number }[]>([]);
   const popupRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ offsetX: 0, offsetY: 0, dragging: false });
 
@@ -34,21 +31,28 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
     }
   }, [visible]);
 
-  // Fetch biometrics every 3 seconds
+  // Fetch heart rate
   useEffect(() => {
     if (!visible) return;
-    const fetchData = async () => {
+
+    const fetchHR = async () => {
       try {
         const res = await fetch("http://localhost:8000/biometrics");
-        const json = await res.json();
-        if (json.status === "ok") setData(json);
+        const json: HRData = await res.json();
+        if (json.status === "ok") {
+          const now = new Date();
+          setHrHistory(prev => {
+            const updated = [...prev, { time: now.toLocaleTimeString(), hr: json.heart_rate }];
+            return updated.slice(-MAX_POINTS); // keep last MAX_POINTS
+          });
+        }
       } catch (err) {
         console.error(err);
       }
     };
 
-    fetchData();
-    const interval = setInterval(fetchData, 3000);
+    fetchHR();
+    const interval = setInterval(fetchHR, 3000);
     return () => clearInterval(interval);
   }, [visible]);
 
@@ -94,7 +98,7 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
         <div className="flex items-center gap-2">
           <HeartPulse className="w-5 h-5 text-white/90" />
           <h2 className="text-white/90 font-bold text-lg drop-shadow-md">
-            Biometrics Data
+            Heart Rate
           </h2>
         </div>
         <button
@@ -108,28 +112,17 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
         </button>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col gap-2 text-white/80 text-sm">
-        {data ? (
-          <>
-            <p>
-              <strong>Latest Emotion:</strong> {data.latest_emotion || "N/A"}
-            </p>
-            <p>
-              <strong>EEG Channels:</strong> {data.raw_eeg.length} x {data.raw_eeg[0]?.length || 0}
-            </p>
-            <p>
-              <strong>Power Features (first window):</strong>{" "}
-              {data.processed_eeg.power_features[0]?.map(f => f.toFixed(2)).join(", ")}
-            </p>
-            <p>
-              <strong>Statistical Features (first window):</strong>{" "}
-              {data.processed_eeg.statistical_features[0]?.map(f => f.toFixed(2)).join(", ")}
-            </p>
-          </>
-        ) : (
-          <p>Loading biometric data...</p>
-        )}
+      {/* Heart rate chart */}
+      <div className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={hrHistory}>
+            <CartesianGrid strokeDasharray="3 3" stroke="white/20" />
+            <XAxis dataKey="time" stroke="white" />
+            <YAxis stroke="white" domain={['dataMin - 5', 'dataMax + 5']} />
+            <Tooltip contentStyle={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: 'white' }} />
+            <Line type="monotone" dataKey="hr" stroke="#f87171" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
