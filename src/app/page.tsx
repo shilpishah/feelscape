@@ -17,7 +17,7 @@ const FeelscapeStart: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
       setShowLandscape(true);
-    }, 2500);
+    }, 6000);
   };
 
   return (
@@ -31,20 +31,7 @@ const FeelscapeStart: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-blue-700/15 via-transparent via-blue-700/15 to-slate-900/50" />
 
           {/* Floating particles (pointer-events-none) */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-1 h-1 bg-blue-300 rounded-full opacity-20 animate-float"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 20}s`,
-                  animationDuration: `${15 + Math.random() * 10}s`,
-                }}
-              />
-            ))}
-          </div>
+          <ParticleField />
         </div>
       )}
 
@@ -58,9 +45,7 @@ const FeelscapeStart: React.FC = () => {
           <p className="text-white text-3xl font-light animate-pulse mb-4">
             Loading...
           </p>
-          <p className="text-blue-200/80 text-lg tracking-wide">
-            Collecting data · Processing signals
-          </p>
+          <TypingText />
         </div>
       )}
 
@@ -135,7 +120,7 @@ const FeelscapeStart: React.FC = () => {
 
       {/* Landscape placeholder */}
       {showLandscape && (
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-pink-300 to-pink-400 transition-all duration-700 z-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-pink-300 to-pink-400 z-20 animate-fadeIn">
           {/* Hamburger Menu (top-right) */}
           <div className="absolute top-4 right-4">
             <button
@@ -187,5 +172,77 @@ const FeelscapeStart: React.FC = () => {
     </div>
   );
 };
+
+const ParticleField: React.FC = React.memo(() => {
+  const particles = React.useMemo(
+    () =>
+      [...Array(50)].map((_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 3}s`,
+        duration: `${10 + Math.random() * 5}s`,
+      })),
+    []
+  );
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute w-1 h-1 bg-blue-300 rounded-full opacity-20 animate-float"
+          style={{
+            left: p.left,
+            top: p.top,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+const TypingText: React.FC = () => {
+  const phrases = ["Collecting data...", "Processing signals..."];
+  const [displayed, setDisplayed] = React.useState("");
+  const [index, setIndex] = React.useState(0);
+  const [subIndex, setSubIndex] = React.useState(0);
+  const [deleting, setDeleting] = React.useState(false);
+
+  React.useEffect(() => {
+    const currentPhrase = phrases[index];
+    let timeout: NodeJS.Timeout;
+
+    if (!deleting && subIndex < currentPhrase.length) {
+      // Typing
+      timeout = setTimeout(() => setSubIndex((s) => s + 1), 70);
+    } else if (deleting && subIndex > 0) {
+      // Deleting
+      timeout = setTimeout(() => setSubIndex((s) => s - 1), 40);
+    } else if (!deleting && subIndex === currentPhrase.length) {
+      // Pause before deleting
+      timeout = setTimeout(() => setDeleting(true), 1200);
+    } else if (deleting && subIndex === 0) {
+      // Switch to next phrase
+      setDeleting(false);
+      setIndex((prev) => (prev + 1) % phrases.length);
+    }
+
+    setDisplayed(currentPhrase.substring(0, subIndex));
+
+    return () => clearTimeout(timeout);
+  }, [subIndex, deleting, index]);
+
+  return (
+    <p className="text-blue-200/80 text-lg tracking-wide font-mono">
+      {displayed}
+      <span className="inline-block w-1 bg-blue-200 ml-0.5 animate-pulse" />
+    </p>
+  );
+};
+
+
 
 export default FeelscapeStart;
