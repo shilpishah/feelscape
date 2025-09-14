@@ -1,3 +1,4 @@
 {
+  "/api/generate-music/route": "app/api/generate-music/route.js",
   "/page": "app/page.js"
 }

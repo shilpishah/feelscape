@@ -2,19 +2,18 @@
 
 import React, { useState } from "react";
 import { Compass, Menu, X, Brain, HeartPulse, Puzzle, Music, HelpCircle } from "lucide-react";
+import MusicPopup from "./components/ui/MusicPopup";
 
 const FeelscapeStart: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showLandscape, setShowLandscape] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // ← HERE IT IS
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showMusicPopup, setShowMusicPopup] = useState(false);
 
   const handleGetStarted = () => {
     if (loading) return;
-    console.log("Starting Feelscape journey...");
     setLoading(true);
-
-    // Simulate data collection delay
     setTimeout(() => {
       setLoading(false);
       setShowLandscape(true);
@@ -23,20 +22,18 @@ const FeelscapeStart: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-900">
-      {/* Aurora Background - make sure it doesn't block clicks */}
+      {/* Aurora Background */}
       {!showLandscape && (
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 via-blue-800 via-blue-700 via-blue-800 to-slate-900" />
           <div className="absolute inset-0 bg-gradient-radial from-blue-600/40 via-blue-700/30 via-transparent to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-blue-800/20 via-blue-600/10 to-blue-700/30" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-blue-700/15 via-transparent via-blue-700/15 to-slate-900/50" />
-
-          {/* Floating particles (pointer-events-none) */}
           <ParticleField />
         </div>
       )}
 
-      {/* Loading overlay (blocks interactions while loading) */}
+      {/* Loading overlay */}
       {loading && (
         <div
           className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-40 animate-fadeIn"
@@ -50,7 +47,7 @@ const FeelscapeStart: React.FC = () => {
         </div>
       )}
 
-      {/* Intro Content (hidden when loading or showing landscape) */}
+      {/* Intro Content */}
       {!loading && !showLandscape && (
         <div className="relative z-10 flex min-h-screen">
           {/* Left Side - Brand */}
@@ -64,8 +61,6 @@ const FeelscapeStart: React.FC = () => {
               <p className="text-xl md:text-2xl text-blue-100/80 font-light tracking-wide leading-relaxed">
                 Navigate your inner landscape
               </p>
-
-              {/* subtle glow behind text (keep behind) */}
               <div className="absolute -z-10 -ml-8 -mt-16 w-96 h-32 bg-blue-500/10 blur-3xl rounded-full" />
             </div>
           </div>
@@ -73,7 +68,6 @@ const FeelscapeStart: React.FC = () => {
           {/* Right Side - CTA */}
           <div className="flex-1 flex flex-col justify-center items-center px-12 relative">
             <div className="flex flex-col items-center space-y-8 relative">
-              {/* Decorative rings: behind the button, pointer-events-none */}
               <div
                 className="absolute w-48 h-48 rounded-full border border-blue-300/10 animate-pulse pointer-events-none z-0"
                 style={{ transform: "translate(-50%, -50%)", left: "50%", top: "50%" }}
@@ -83,7 +77,6 @@ const FeelscapeStart: React.FC = () => {
                 style={{ transform: "translate(-50%, -50%)", left: "50%", top: "50%", animationDelay: "1s" }}
               />
 
-              {/* Compass Button - ensure it's above everything and clickable */}
               <button
                 onClick={handleGetStarted}
                 onMouseEnter={() => setIsHovered(true)}
@@ -93,15 +86,12 @@ const FeelscapeStart: React.FC = () => {
                            hover:bg-white/10 hover:border-white/20 transition-all duration-300 
                            hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-400"
                 aria-label="Begin Feelscape journey"
-                style={{ pointerEvents: loading ? "none" : "auto" }}
               >
-                {/* Button glow effect (purely visual, not interactive) */}
                 <div
                   aria-hidden
                   className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-teal-400/20 
                               blur-xl transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
                 />
-
                 <Compass
                   className={`w-16 h-16 text-blue-300 relative z-10 transition-all duration-500 ${
                     isHovered ? "rotate-45 text-blue-200" : ""
@@ -109,7 +99,6 @@ const FeelscapeStart: React.FC = () => {
                 />
               </button>
 
-              {/* CTA Text */}
               <div className="text-center mt-2">
                 <p className="text-2xl font-medium text-white mb-2">Begin your journey</p>
                 <p className="text-blue-200/60 text-sm">Connect your biometric devices to start</p>
@@ -124,12 +113,11 @@ const FeelscapeStart: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-pink-300 to-pink-400 z-20 animate-fadeIn">
           {/* Hamburger Menu (top-right) */}
           <div className="absolute top-4 right-4 z-50 flex flex-col items-end space-y-3">
-            {/* The hamburger/x button */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
-                        hover:bg-white/30 hover:scale-110 transition-all duration-300 
-                        hover:shadow-lg hover:shadow-white/25 flex items-center justify-center"
+                         hover:bg-white/30 hover:scale-110 transition-all duration-300 
+                         hover:shadow-lg hover:shadow-white/25 flex items-center justify-center"
               aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
               {menuOpen ? (
@@ -139,23 +127,26 @@ const FeelscapeStart: React.FC = () => {
               )}
             </button>
 
-            {/* THE EXPANDABLE MENU */}
             <div
-              className={`flex flex-col items-center space-y-3 transition-all duration-500 ease-out origin-top-right ${
-                menuOpen 
-                  ? 'opacity-100 scale-100 translate-y-0' 
+              className={`flex flex-col items-end space-y-3 origin-top-right ${
+                menuOpen
+                  ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
                   : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
-              }`}
+              } transition-all duration-300`}
             >
-              <MenuIcon icon={Brain} label="Mood" />
-              <MenuIcon icon={HeartPulse} label="Biometrics" />
-              <MenuIcon icon={Puzzle} label="Insights" />
-              <MenuIcon icon={Music} label="Audio" />
-              <MenuIcon icon={HelpCircle} label="Help" />
+              <MenuIcon icon={Brain} label="Mood" delay={0} />
+              <MenuIcon icon={HeartPulse} label="Biometrics" delay={50} />
+              <MenuIcon icon={Puzzle} label="Insights" delay={100} />
+              <MenuIcon
+                icon={Music}
+                label="Audio"
+                delay={150}
+                onClick={() => setShowMusicPopup(true)}
+              />
+              <MenuIcon icon={HelpCircle} label="Help" delay={200} />
             </div>
           </div>
 
-          {/* Landscape placeholder center */}
           <div className="flex items-center justify-center min-h-screen">
             <div className="text-center">
               <h2 className="text-4xl font-bold text-black mb-2">🌸 Landscape Placeholder</h2>
@@ -165,38 +156,31 @@ const FeelscapeStart: React.FC = () => {
         </div>
       )}
 
-      {/* Global styles for animations */}
+      {/* Music Popup */}
+      {showMusicPopup && <MusicPopup onClose={() => setShowMusicPopup(false)} />}
+
+      {/* Global styles */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
-          @keyframes float {
-            0%, 100% {
-              transform: translateY(0px) translateX(0px);
-              opacity: 0.3;
+            @keyframes float {
+              0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
+              25% { opacity: 0.7; }
+              50% { transform: translateY(-120px) translateX(30px); opacity: 0.9; }
+              75% { opacity: 0.6; }
             }
-            25% { opacity: 0.7; }
-            50% {
-              transform: translateY(-120px) translateX(30px);
-              opacity: 0.9;
-            }
-            75% { opacity: 0.6; }
-          }
-          .animate-float { animation: float linear infinite; }
+            .animate-float { animation: float linear infinite; }
 
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          .animate-fadeIn {
-            animation: fadeIn 0.5s ease-in-out forwards;
-          }
-        `,
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .animate-fadeIn { animation: fadeIn 0.5s ease-in-out forwards; }
+          `,
         }}
       />
     </div>
   );
 };
 
+// Particle Field
 const ParticleField: React.FC = React.memo(() => {
   const particles = React.useMemo(
     () =>
@@ -228,6 +212,7 @@ const ParticleField: React.FC = React.memo(() => {
   );
 });
 
+// Typing Text
 const TypingText: React.FC = () => {
   const phrases = ["Collecting data...", "Processing signals..."];
   const [displayed, setDisplayed] = React.useState("");
@@ -240,22 +225,17 @@ const TypingText: React.FC = () => {
     let timeout: NodeJS.Timeout;
 
     if (!deleting && subIndex < currentPhrase.length) {
-      // Typing
       timeout = setTimeout(() => setSubIndex((s) => s + 1), 70);
     } else if (deleting && subIndex > 0) {
-      // Deleting
       timeout = setTimeout(() => setSubIndex((s) => s - 1), 40);
     } else if (!deleting && subIndex === currentPhrase.length) {
-      // Pause before deleting
       timeout = setTimeout(() => setDeleting(true), 1200);
     } else if (deleting && subIndex === 0) {
-      // Switch to next phrase
       setDeleting(false);
       setIndex((prev) => (prev + 1) % phrases.length);
     }
 
     setDisplayed(currentPhrase.substring(0, subIndex));
-
     return () => clearTimeout(timeout);
   }, [subIndex, deleting, index]);
 
@@ -267,15 +247,22 @@ const TypingText: React.FC = () => {
   );
 };
 
-const MenuIcon: React.FC<{ icon: React.ComponentType<any>; label: string }> = ({ 
-  icon: Icon, 
-  label 
-}) => {
+// Menu Icon with optional stagger delay and click
+const MenuIcon: React.FC<{
+  icon: React.ComponentType<any>;
+  label: string;
+  delay?: number;
+  onClick?: () => void;
+}> = ({ icon: Icon, label, delay = 0, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative group">
+    <div
+      className="relative group transition-all duration-300"
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       <button
+        onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
@@ -285,8 +272,7 @@ const MenuIcon: React.FC<{ icon: React.ComponentType<any>; label: string }> = ({
       >
         <Icon className="w-5 h-5 text-white" />
       </button>
-      
-      {/* Tooltip */}
+
       <div
         className={`absolute top-1/2 right-full mr-3 transform -translate-y-1/2 
                     bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 
