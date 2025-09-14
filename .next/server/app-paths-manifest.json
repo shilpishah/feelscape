@@ -1,3 +1,6 @@
 {
+  "/api/check-status/route": "app/api/check-status/route.js",
+  "/api/generate-music/route": "app/api/generate-music/route.js",
+  "/icon.ico/route": "app/icon.ico/route.js",
   "/page": "app/page.js"
 }
