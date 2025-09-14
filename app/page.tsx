@@ -27,9 +27,9 @@ const FeelscapeStart: React.FC = () => {
   const [backgroundImage, setBackgroundImage] = useState<string>("/neutral_1.png");
 
   const emotionImages: Record<string, string[]> = {
-    positive: ["/positive_1.png", "/positive_2.png", "/positive_3.png", "/positive_4.png", "/positive_5.png"],
-    neutral: ["/neutral_1.png", "/neutral_2.png", "/neutral_3.png"],
-    negative: ["/negative_1.png", "/negative_2.png", "/negative_3.png", "/negative_4.png"],
+    positive: ["/positive_1.png", "/positive_2.jpg", "/positive_3.jpg", "/positive_4.jpg", "/positive_5.png", "/positive_6.jpg", "/positive_7.png", "/positive_8.jpg"],
+    neutral: ["/neutral_1.jpg", "/neutral_2.jpg", "/neutral_3.jpg", "/neutral_4.jpg", "/neutral_5.jpg", "/neutral_6.jpg", "/neutral_7.jpg", "/neutral_8.png"],
+    negative: ["/negative_1.png", "/negative_2.jpg", "/negative_3.png", "/negative_4.png", "/negative_5.png", "/negative_6.jpg", "/negative_7.jpg"],
   };
 
   const handleGetStarted = () => {
@@ -61,8 +61,17 @@ const FeelscapeStart: React.FC = () => {
   // Update background based on emotion
   useEffect(() => {
     if (!currentEmotion) return;
-    // currentEmotion is already "positive", "neutral", or "negative"
-    const images = emotionImages[currentEmotion];
+    
+    // Convert emotion to lowercase and ensure it exists in emotionImages
+    const emotionKey = currentEmotion.toLowerCase();
+    const images = emotionImages[emotionKey];
+    
+    // Safety check to prevent undefined error
+    if (!images || images.length === 0) {
+      console.warn(`No images found for emotion: ${currentEmotion}`);
+      return;
+    }
+    
     const randomImage = images[Math.floor(Math.random() * images.length)];
     setBackgroundImage(randomImage);
   }, [currentEmotion]);
