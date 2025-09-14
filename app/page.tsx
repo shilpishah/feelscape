@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Compass, Menu, X, Brain, HeartPulse, Puzzle, Music, HelpCircle } from "lucide-react";
-import MusicPopup from "../components/ui/musicpopup";
+import MusicPopup from "../components/ui/MusicPopup";
 
 const FeelscapeStart: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);

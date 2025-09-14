@@ -13,7 +13,8 @@ interface MusicPopupProps {
 }
 
 const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
-  if (!visible) return null;
+  // if (!visible) return null;
+  
 
   const popupRef = useRef<HTMLDivElement>(null);
   const drag = useRef({ offsetX: 0, offsetY: 0, dragging: false });
@@ -46,6 +47,32 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
+
+  const handleRunPython = async () => {
+    setIsGenerating(true);
+    setGeneratedClips([]);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/run-python", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+      // console.log("DATA: ", data);
+      if (data.success) {
+        console.log("Python output:", data.output);
+      } else {
+        console.error("Python error:", data.error);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
 
   const startDrag = (e: React.MouseEvent) => {
     if (!popupRef.current) return;
@@ -138,7 +165,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
       className="fixed z-[999] w-[380px] max-h-[80vh] flex flex-col rounded-3xl border border-white/20 
                 backdrop-blur-2xl bg-white/10 bg-gradient-to-br from-white/20 via-white/10 to-pink-200/20 
                 shadow-xl cursor-grab active:cursor-grabbing overflow-hidden"
-      style={{ top: "120px", left: "120px" }}
+      style={{ top: "120px", left: "120px", display: visible ? "block" : "none" }}
     >
       {/* Header */}
       <div className="flex justify-between items-center px-6 pt-4 pb-3 select-none">
@@ -158,7 +185,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
 
       {/* Input */}
       <div className="px-6 pb-4 flex flex-col gap-3">
-        <Textarea
+        {/* <Textarea
           placeholder="Describe your song..."
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -171,8 +198,8 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
           onChange={(e) => setTags(e.target.value)}
           disabled={isGenerating}
           className="resize-none min-h-[40px] text-base p-3 border border-white/30 rounded-lg text-white/80 placeholder-white/40"
-        />
-        <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()} className="w-full">
+        /> */}
+        <Button onClick={handleRunPython} className="w-full">
           {isGenerating ? "Generating..." : "Generate Song"}
         </Button>
       </div>

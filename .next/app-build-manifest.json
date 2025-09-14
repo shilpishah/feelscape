@@ -11,15 +11,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
     ],
-    "/api/generate-music/route": [
+    "/api/run-python/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/generate-music/route.js"
-    ],
-    "/api/check-status/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/check-status/route.js"
+      "static/chunks/app/api/run-python/route.js"
     ]
   }
 }

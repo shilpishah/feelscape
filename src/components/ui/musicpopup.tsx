@@ -30,6 +30,26 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
   const [isDownloading, setIsDownloading] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
+    const handleRunPython = async () => {
+      try {
+        const response = await fetch("/api/run-python", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ someParam: "hello" }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log("Python output:", data.output);
+        } else {
+          console.error("Python error:", data.error);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    handleRunPython();
     const handleMouseMove = (e: MouseEvent) => {
       if (!drag.current.dragging || !popupRef.current) return;
       popupRef.current.style.left = `${e.clientX - drag.current.offsetX}px`;
@@ -46,6 +66,7 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
       window.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
+
 
   const startDrag = (e: React.MouseEvent) => {
     if (!popupRef.current) return;
