@@ -24,7 +24,7 @@ const FeelscapeStart: React.FC = () => {
   const [showMusicPopup, setShowMusicPopup] = useState(false);
   const [showHelpPopup, setShowHelpPopup] = useState(false);
   const [currentEmotion, setCurrentEmotion] = useState<string | null>(null);
-  const [backgroundImage, setBackgroundImage] = useState<string>("/neutral_1.png");
+  const [backgroundImage, setBackgroundImage] = useState<string>("/neutral_1.jpg");
 
   const emotionImages: Record<string, string[]> = {
     positive: ["/positive_1.png", "/positive_2.jpg", "/positive_3.jpg", "/positive_4.jpg", "/positive_5.png", "/positive_6.jpg", "/positive_7.png", "/positive_8.jpg"],

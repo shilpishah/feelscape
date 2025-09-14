@@ -74,7 +74,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ visible, onClose }) => {
         </p>
         <ul className="text-white/80 text-sm list-disc list-inside space-y-1">
           <li>Use the Mood button to view detected emotions in real-time.</li>
-          <li>Use the Biometrics button to view detailed EEG, HR, and breathing metrics.</li>
+          {/* <li>Use the Biometrics button to view detailed EEG, HR, and breathing metrics.</li> */}
           <li>Use the Music button to play ambient tracks based on your mood.</li>
           <li>Close any popup by clicking the X in the top-right corner or drag them around freely.</li>
         </ul>
