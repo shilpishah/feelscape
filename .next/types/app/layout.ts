@@ -1,4 +1,4 @@
-// File: /home/ron0/feelscape/app/layout.tsx
+// File: C:\Users\amish\Documents\MITHack\NEWCODE\feelscape\app\layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
