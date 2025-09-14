@@ -1,12 +1,11 @@
 # Feelscape - EEG Emotion Recognition System
 *HackMIT 2025*
 
-A real-time emotion recognition system that uses 6-channel EEG data, heart rate, and breathing rate to classify emotions according to Paul Ekman's model.
+A real-time emotion recognition system that uses 4-channel EEG data and heart rate to classify emotions as positive, neutral, or negative.
 
 ## 🧠 Features
 
-- **Multi-modal Input**: Combines EEG signals with physiological data (heart rate, breathing rate)
-- **Paul Ekman's 6 Basic Emotions**: Recognizes happiness, sadness, anger, surprise, fear, and disgust
+- **Multi-modal Input**: Combines EEG signals with physiological data (heart rate)
 - **Advanced Neural Architecture**: Hybrid model with spatial-temporal convolutions and attention mechanisms
 - **Real-time Processing**: Continuous emotion monitoring with fail-safe mechanisms
 - **Robust Preprocessing**: Advanced EEG signal processing with artifact removal and feature extraction
