@@ -167,7 +167,7 @@ const FeelscapeStart: React.FC = () => {
             >
               <MenuIcon icon={Brain} label="Mood" onClick={() => setShowMoodPopup(true)} />
               <MenuIcon icon={HeartPulse} label="Biometrics" onClick={() => setShowBiometricsPopup(true)} />
-              <MenuIcon icon={Puzzle} label="Insights" />
+              {/* <MenuIcon icon={Puzzle} label="Insights" /> */}
               <MenuIcon icon={Music} label="Music" onClick={() => setShowMusicPopup(true)} />
               <MenuIcon icon={HelpCircle} label="Help" onClick={() => setShowHelpPopup(true)} />
             </div>

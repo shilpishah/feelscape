@@ -10,11 +10,11 @@ interface BiometricsPopupProps {
 }
 
 interface HRData {
-  heart_rate: number;
-  latest_emotion?: string | null; // optional, not used
+  status: string;
+  heart_rate?: number;
 }
 
-const MAX_POINTS = 30; // number of points to show in the chart
+const MAX_POINTS = 30;
 
 const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) => {
   const [show, setShow] = useState(visible);
@@ -39,20 +39,22 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
       try {
         const res = await fetch("http://localhost:8000/biometrics");
         const json: HRData = await res.json();
-        if (json.status === "ok") {
+
+        if (json.status === "ok" && json.heart_rate !== undefined) {
           const now = new Date();
           setHrHistory(prev => {
             const updated = [...prev, { time: now.toLocaleTimeString(), hr: json.heart_rate }];
-            return updated.slice(-MAX_POINTS); // keep last MAX_POINTS
+            return updated.slice(-MAX_POINTS);
           });
         }
       } catch (err) {
-        console.error(err);
+        console.error("Failed to fetch HR:", err);
       }
     };
 
+    // Initial fetch + interval
     fetchHR();
-    const interval = setInterval(fetchHR, 3000);
+    const interval = setInterval(fetchHR, 2000);
     return () => clearInterval(interval);
   }, [visible]);
 
@@ -115,17 +117,14 @@ const BiometricsPopup: React.FC<BiometricsPopupProps> = ({ visible, onClose }) =
       {/* Heart rate chart */}
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={hrHistory}>
-                <CartesianGrid strokeDasharray="3 3" stroke="white/20" />
-                <XAxis dataKey="time" stroke="white" />
-                <YAxis 
-                stroke="white" 
-                domain={([dataMin, dataMax]) => [dataMin - 5, dataMax + 5]} 
-                />
-                <Tooltip contentStyle={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: 'white' }} />
-                <Line type="monotone" dataKey="hr" stroke="#f87171" strokeWidth={2} dot={false} />
-            </LineChart>
-            </ResponsiveContainer>
+          <LineChart data={hrHistory}>
+            <CartesianGrid strokeDasharray="3 3" stroke="white/20" />
+            <XAxis dataKey="time" stroke="white" />
+            <YAxis stroke="white" domain={([dataMin, dataMax]) => [dataMin - 5, dataMax + 5]} />
+            <Tooltip contentStyle={{ backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', color: 'white' }} />
+            <Line type="monotone" dataKey="hr" stroke="#f87171" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
