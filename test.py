@@ -20,6 +20,7 @@ from typing import List
 from dotenv import load_dotenv
 import base64
 import requests
+import random
 
 # Import FastAPI components
 from fastapi import FastAPI, File, UploadFile, HTTPException
@@ -85,6 +86,12 @@ def generate_music_from_prompt(input_prompt: str) -> dict:
         raise HTTPException(status_code=502, detail=f"Failed to generate music from Suno API: {e}")
 
 
+
+# server_response = requests.get('http://localhost:8000/api_server/latest_emotion')
+# data = server_response.json()
+# emotion = data['latest_emotion']
+# print(f"Current emotion: {emotion}")
+# print(emotion)
 # --- FastAPI Application ---
 
 app = FastAPI(
@@ -106,29 +113,75 @@ async def create_music_from_images(files: List[UploadFile] = File(..., descripti
     """
     if not files:
         raise HTTPException(status_code=400, detail="No image files were uploaded.")
+    
+    current_emotion = "neutral"  # default
+    try:
+        emotion_response = requests.get('http://localhost:8000/api_server/latest_emotion', timeout=2)
+        if emotion_response.status_code == 200:
+            emotion_data = emotion_response.json()
+            current_emotion = emotion_data['latest_emotion']
+            print(f"Current Emotion: {current_emotion}")
+    except Exception as e:
+        print(f"Could not fetch emotion: {e}")
 
     messages_content = []
 
     # Process and encode each uploaded image
-    for file in files:
-        if not file.content_type.startswith('image/'):
-            raise HTTPException(status_code=400, detail=f"File '{file.filename}' is not a valid image. Please upload only images.")
+    # for file in files:
+    #     if not file.content_type.startswith('image/'):
+    #         raise HTTPException(status_code=400, detail=f"File '{file.filename}' is not a valid image. Please upload only images.")
+    #     image_data = await file.read()
+    #     base64_image = encode_image_to_base64(image_data)
 
-        image_data = await file.read()
-        base64_image = encode_image_to_base64(image_data)
+    #     messages_content.append({
+    #         "type": "image",
+    #         "source": {
+    #             "type": "base64",
+    #             "media_type": file.content_type,
+    #             "data": base64_image
+    #         }
+    #     })
+    
+    match current_emotion.lower():
+        case "positive":
+            # Option 2: Select random image that starts with "positive" (if you have such naming)
+            positive_files = [file for file in files if file.filename and file.filename.lower().startswith('positive')]
+            if positive_files:
+                selected_file = random.choice(positive_files)
+                final_file = [selected_file]
+            else:
+                raise HTTPException(status_code=400, detail="No positive images found.")
+        case "negative":
+            negative_files = [file for file in files if file.filename and file.filename.lower().startswith('negative')]
+            if negative_files:
+                selected_file = random.choice(negative_files)
+                final_file = [selected_file]
+            else:
+                raise HTTPException(status_code=400, detail="No negative images found.")
+        case "neutral":
+            neutral_files = [file for file in files if file.filename and file.filename.lower().startswith('neutral')]
+            if neutral_files:
+                selected_file = random.choice(neutral_files)
+                final_file = [selected_file]
+            else:
+                raise HTTPException(status_code=400, detail="No neutral images found.")
+        
+    image_data = await final_file.read()
+    base64_image = encode_image_to_base64(image_data)
 
-        messages_content.append({
-            "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": file.content_type,
-                "data": base64_image
-            }
-        })
+    messages_content.append({
+        "type": "image",
+        "source": {
+            "type": "base64",
+            "media_type": final_file.content_type,
+            "data": base64_image
+        }
+    })
+
 
     # Define the text prompt for the model
     prompt = """
-    You are given a list of images. Select one image at random from the provided list.
+    You are given a single image.
     Take specific note of the emotions that the landscape is representing.
     Please limit your description to no more than 1 sentence.
     """
