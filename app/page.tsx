@@ -59,7 +59,6 @@ const FeelscapeStart: React.FC = () => {
   }, [showLandscape]);
 
   // Update background based on emotion
-  // Update background based on emotion
   useEffect(() => {
     if (!currentEmotion) return;
     // currentEmotion is already "positive", "neutral", or "negative"
