@@ -1,5 +1,5 @@
 {
-  "/api/generate-music/route": "app/api/generate-music/route.js",
-  "/api/check-status/route": "app/api/check-status/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/icon.ico/route": "app/icon.ico/route.js",
   "/page": "app/page.js"
 }

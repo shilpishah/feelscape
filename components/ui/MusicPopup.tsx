@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { X, Music, Play, Pause, Download } from "lucide-react";
 import { SunoService, SunoClip } from "@/lib/suno-service";
@@ -149,9 +148,10 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
     <div
       ref={popupRef}
       onMouseDown={startDrag}
-      className="fixed z-[999] w-[380px] max-h-[80vh] flex flex-col rounded-3xl border border-white/20
-                backdrop-blur-2xl bg-white/10 bg-gradient-to-br from-white/20 via-white/10 to-pink-200/20
-                shadow-xl cursor-grab active:cursor-grabbing overflow-hidden"
+      className={`fixed z-[999] w-[380px] max-h-[80vh] flex flex-col rounded-2xl
+              backdrop-blur-lg bg-white/10 border border-white/20 shadow-lg
+              cursor-grab active:cursor-grabbing overflow-hidden
+              ${visible ? "opacity-100" : "opacity-0"} transition-opacity duration-250`}
       style={{
         top: "120px",
         left: "120px",

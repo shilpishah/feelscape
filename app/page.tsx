@@ -3,13 +3,20 @@
 import React, { useState } from "react";
 import { Compass, Menu, X, Brain, HeartPulse, Puzzle, Music, HelpCircle } from "lucide-react";
 import MusicPopup from "../components/ui/MusicPopup";
+import MoodPopup from "../components/ui/moodpopup";
+import BiometricsPopup from "../components/ui/biometricspopup";
+import HelpPopup from "../components/ui/helppopup";
+
 
 const FeelscapeStart: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showLandscape, setShowLandscape] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showMusicPopup, setShowMusicPopup] = useState(false); // NEW
+  const [showMoodPopup, setShowMoodPopup] = useState(false);
+  const [showBiometricsPopup, setShowBiometricsPopup] = useState(false);
+  const [showMusicPopup, setShowMusicPopup] = useState(false);
+  const [showHelpPopup, setShowHelpPopup] = useState(false);
 
   const handleGetStarted = () => {
     if (loading) return;
@@ -100,7 +107,7 @@ const FeelscapeStart: React.FC = () => {
         <div
           className="absolute inset-0 z-20 animate-fadeIn"
           style={{
-            backgroundImage: "url('/testImage2.png')",
+            backgroundImage: "url('/positive_5.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -124,11 +131,11 @@ const FeelscapeStart: React.FC = () => {
                   : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
               }`}
             >
-              <MenuIcon icon={Brain} label="Mood" />
-              <MenuIcon icon={HeartPulse} label="Biometrics" />
+              <MenuIcon icon={Brain} label="Mood" onClick={() => setShowMoodPopup(true)} />
+              <MenuIcon icon={HeartPulse} label="Biometrics" onClick={() => setShowBiometricsPopup(true)} />
               <MenuIcon icon={Puzzle} label="Insights" />
               <MenuIcon icon={Music} label="Music" onClick={() => setShowMusicPopup(true)} />
-              <MenuIcon icon={HelpCircle} label="Help" />
+              <MenuIcon icon={HelpCircle} label="Help" onClick={() => setShowHelpPopup(true)} />
             </div>
           </div>
         </div>
@@ -136,7 +143,10 @@ const FeelscapeStart: React.FC = () => {
 
 
       {/* POPUP */}
+      <MoodPopup visible={showMoodPopup} onClose={() => setShowMoodPopup(false)} />
+      <BiometricsPopup visible={showBiometricsPopup} onClose={() => setShowBiometricsPopup(false)} />
       <MusicPopup visible={showMusicPopup} onClose={() => setShowMusicPopup(false)} />
+      <HelpPopup visible={showHelpPopup} onClose={() => setShowHelpPopup(false)} />
 
       <style
         dangerouslySetInnerHTML={{
