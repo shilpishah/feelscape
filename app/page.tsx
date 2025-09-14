@@ -59,17 +59,15 @@ const FeelscapeStart: React.FC = () => {
   }, [showLandscape]);
 
   // Update background based on emotion
+  // Update background based on emotion
   useEffect(() => {
     if (!currentEmotion) return;
-    let category: "positive" | "neutral" | "negative" = "neutral";
-    const posEmotions = ["happy", "excited", "joyful", "content"];
-    const negEmotions = ["sad", "angry", "anxious", "frustrated"];
-    if (posEmotions.includes(currentEmotion)) category = "positive";
-    else if (negEmotions.includes(currentEmotion)) category = "negative";
-    const images = emotionImages[category];
+    // currentEmotion is already "positive", "neutral", or "negative"
+    const images = emotionImages[currentEmotion];
     const randomImage = images[Math.floor(Math.random() * images.length)];
     setBackgroundImage(randomImage);
   }, [currentEmotion]);
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-900">
