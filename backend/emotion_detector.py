@@ -19,7 +19,7 @@ from .neural_networks import EEGEmotionNet
 from .data_preprocessing import EEGPreprocessor
 
 class SimpleEmotionDetector:
-    def __init__(self, model_path=None, osc_port=5000):
+    def __init__(self, model_path=None, osc_port=8000): # changed to 8000 for compatibility with flask
         self.osc_port = osc_port
         # Updated for 3-class emotion system
         self.emotion_names = ['POSITIVE', 'NEGATIVE', 'NEUTRAL']
