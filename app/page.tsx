@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Compass, Menu, X, Brain, HeartPulse, Puzzle, Music, HelpCircle } from "lucide-react";
+import {
+  Compass,
+  Menu,
+  X,
+  Brain,
+  HeartPulse,
+  Puzzle,
+  Music,
+  HelpCircle,
+} from "lucide-react";
 import MusicPopup from "../components/ui/MusicPopup";
 
 const FeelscapeStart: React.FC = () => {
@@ -68,27 +77,48 @@ const FeelscapeStart: React.FC = () => {
           {/* Right Side */}
           <div className="flex-1 flex flex-col justify-center items-center px-12 relative">
             <div className="flex flex-col items-center space-y-8 relative">
-              <div className="absolute w-48 h-48 rounded-full border border-blue-300/10 animate-pulse pointer-events-none z-0"
-                style={{ transform: "translate(-50%, -50%)", left: "50%", top: "50%" }} />
-              <div className="absolute w-64 h-64 rounded-full border border-teal-300/5 animate-pulse pointer-events-none z-0"
-                style={{ transform: "translate(-50%, -50%)", left: "50%", top: "50%", animationDelay: "1s" }} />
+              <div
+                className="absolute w-48 h-48 rounded-full border border-blue-300/10 animate-pulse pointer-events-none z-0"
+                style={{
+                  transform: "translate(-50%, -50%)",
+                  left: "50%",
+                  top: "50%",
+                }}
+              />
+              <div
+                className="absolute w-64 h-64 rounded-full border border-teal-300/5 animate-pulse pointer-events-none z-0"
+                style={{
+                  transform: "translate(-50%, -50%)",
+                  left: "50%",
+                  top: "50%",
+                  animationDelay: "1s",
+                }}
+              />
               <button
                 onClick={handleGetStarted}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
                 disabled={loading}
-                className="group relative z-30 p-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10 
-                           hover:bg-white/10 hover:border-white/20 transition-all duration-300 
+                className="group relative z-30 p-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10
+                           hover:bg-white/10 hover:border-white/20 transition-all duration-300
                            hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                <div aria-hidden
-                  className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-teal-400/20 
-                              blur-xl transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`} />
-                <Compass className={`w-16 h-16 text-blue-300 relative z-10 transition-all duration-500 ${isHovered ? "rotate-45 text-blue-200" : ""}`} />
+                <div
+                  aria-hidden
+                  className={`absolute inset-0 rounded-full bg-gradient-to-r from-blue-400/20 to-teal-400/20
+                              blur-xl transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
+                />
+                <Compass
+                  className={`w-16 h-16 text-blue-300 relative z-10 transition-all duration-500 ${isHovered ? "rotate-45 text-blue-200" : ""}`}
+                />
               </button>
               <div className="text-center mt-2">
-                <p className="text-2xl font-medium text-white mb-2">Begin your journey</p>
-                <p className="text-blue-200/60 text-sm">Connect your biometric devices to start</p>
+                <p className="text-2xl font-medium text-white mb-2">
+                  Begin your journey
+                </p>
+                <p className="text-blue-200/60 text-sm">
+                  Connect your biometric devices to start
+                </p>
               </div>
             </div>
           </div>
@@ -109,11 +139,15 @@ const FeelscapeStart: React.FC = () => {
           <div className="absolute top-4 right-4 z-50 flex flex-col items-end space-y-3">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
-                        hover:bg-white/30 hover:scale-110 transition-all duration-300 
+              className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30
+                        hover:bg-white/30 hover:scale-110 transition-all duration-300
                         hover:shadow-lg hover:shadow-white/25 flex items-center justify-center"
             >
-              {menuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              {menuOpen ? (
+                <X className="w-5 h-5 text-white" />
+              ) : (
+                <Menu className="w-5 h-5 text-white" />
+              )}
             </button>
 
             {/* Dropdown menu */}
@@ -127,16 +161,22 @@ const FeelscapeStart: React.FC = () => {
               <MenuIcon icon={Brain} label="Mood" />
               <MenuIcon icon={HeartPulse} label="Biometrics" />
               <MenuIcon icon={Puzzle} label="Insights" />
-              <MenuIcon icon={Music} label="Music" onClick={() => setShowMusicPopup(true)} />
+              <MenuIcon
+                icon={Music}
+                label="Music"
+                onClick={() => setShowMusicPopup(true)}
+              />
               <MenuIcon icon={HelpCircle} label="Help" />
             </div>
           </div>
         </div>
       )}
 
-
       {/* POPUP */}
-      <MusicPopup visible={showMusicPopup} onClose={() => setShowMusicPopup(false)} />
+      <MusicPopup
+        visible={showMusicPopup}
+        onClose={() => setShowMusicPopup(false)}
+      />
 
       <style
         dangerouslySetInnerHTML={{
@@ -176,26 +216,36 @@ const FeelscapeStart: React.FC = () => {
 
 const ParticleField: React.FC = React.memo(() => {
   const particles = React.useMemo(
-    () => [...Array(50)].map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 3}s`,
-      duration: `${10 + Math.random() * 5}s`,
-    })), []
+    () =>
+      [...Array(50)].map((_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 3}s`,
+        duration: `${10 + Math.random() * 5}s`,
+      })),
+    [],
   );
 
   return (
     <div className="absolute inset-0 pointer-events-none">
       {particles.map((p) => (
-        <div key={p.id}
+        <div
+          key={p.id}
           className="absolute w-1 h-1 bg-blue-300 rounded-full opacity-20 animate-float"
-          style={{ left: p.left, top: p.top, animationDelay: p.delay, animationDuration: p.duration }}
+          style={{
+            left: p.left,
+            top: p.top,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
+          }}
         />
       ))}
     </div>
   );
 });
+
+ParticleField.displayName = "ParticleField";
 
 const TypingText: React.FC = () => {
   const phrases = ["Collecting data...", "Processing signals..."];
@@ -208,9 +258,12 @@ const TypingText: React.FC = () => {
     const currentPhrase = phrases[index];
     let timeout: NodeJS.Timeout;
 
-    if (!deleting && subIndex < currentPhrase.length) timeout = setTimeout(() => setSubIndex((s) => s + 1), 70);
-    else if (deleting && subIndex > 0) timeout = setTimeout(() => setSubIndex((s) => s - 1), 40);
-    else if (!deleting && subIndex === currentPhrase.length) timeout = setTimeout(() => setDeleting(true), 1200);
+    if (!deleting && subIndex < currentPhrase.length)
+      timeout = setTimeout(() => setSubIndex((s) => s + 1), 70);
+    else if (deleting && subIndex > 0)
+      timeout = setTimeout(() => setSubIndex((s) => s - 1), 40);
+    else if (!deleting && subIndex === currentPhrase.length)
+      timeout = setTimeout(() => setDeleting(true), 1200);
     else if (deleting && subIndex === 0) {
       setDeleting(false);
       setIndex((prev) => (prev + 1) % phrases.length);
@@ -228,7 +281,11 @@ const TypingText: React.FC = () => {
   );
 };
 
-const MenuIcon: React.FC<{ icon: React.ComponentType<any>; label: string; onClick?: () => void }> = ({ icon: Icon, label, onClick }) => {
+const MenuIcon: React.FC<{
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onClick?: () => void;
+}> = ({ icon: Icon, label, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className="relative group">
@@ -236,17 +293,21 @@ const MenuIcon: React.FC<{ icon: React.ComponentType<any>; label: string; onClic
         onClick={onClick}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 
-                   hover:bg-white/30 hover:scale-110 transition-all duration-300 
+        className="p-3 rounded-full bg-white/20 backdrop-blur-sm border border-white/30
+                   hover:bg-white/30 hover:scale-110 transition-all duration-300
                    hover:shadow-lg hover:shadow-white/25"
       >
         <Icon className="w-5 h-5 text-white" />
       </button>
-      <div className={`absolute top-1/2 right-full mr-3 transform -translate-y-1/2 
-                      bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 
+      <div
+        className={`absolute top-1/2 right-full mr-3 transform -translate-y-1/2
+                      bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1
                       rounded-lg whitespace-nowrap transition-all duration-200 ${
-        isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2 pointer-events-none'
-      }`}>
+                        isHovered
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 translate-x-2 pointer-events-none"
+                      }`}
+      >
         {label}
       </div>
     </div>

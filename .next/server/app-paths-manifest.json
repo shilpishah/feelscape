@@ -1,5 +1,0 @@
-{
-  "/api/generate-music/route": "app/api/generate-music/route.js",
-  "/api/check-status/route": "app/api/check-status/route.js",
-  "/page": "app/page.js"
-}
