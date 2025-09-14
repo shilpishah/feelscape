@@ -15,8 +15,8 @@ import logging
 import os
 from sklearn.preprocessing import StandardScaler
 
-from neural_networks import EEGEmotionNet
-from data_preprocessing import EEGPreprocessor
+from .neural_networks import EEGEmotionNet
+from .data_preprocessing import EEGPreprocessor
 
 class SimpleEmotionDetector:
     def __init__(self, model_path=None, osc_port=5000):
