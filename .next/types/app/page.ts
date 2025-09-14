@@ -1,4 +1,4 @@
-// File: /Users/elainewu/Documents/cornell/hackmit/feelscape/app/page.tsx
+// File: /home/ron0/feelscape/app/page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

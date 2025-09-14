@@ -3,7 +3,7 @@
 // This file validates that all pages and layouts export the correct types
 
 import type { AppRoutes, LayoutRoutes, ParamMap, AppRouteHandlerRoutes } from "./routes.js"
-import type { ResolvingMetadata, ResolvingViewport } from "next/dist/lib/metadata/types/metadata-interface.js"
+import type { ResolvingMetadata, ResolvingViewport } from "next/types.js"
 import type { NextRequest } from 'next/server.js'
 
 type AppPageConfig<Route extends AppRoutes = AppRoutes> = {
@@ -49,20 +49,47 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 
 // Validate ../../app/page.tsx
 {
+  type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
   const handler = {} as typeof import("../../app/page.js")
-  handler satisfies AppPageConfig<"/">
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../app/api/check-status/route.ts
 {
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/check-status">> = Specific
   const handler = {} as typeof import("../../app/api/check-status/route.js")
-  handler satisfies RouteHandlerConfig<"/api/check-status">
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/generate-from-images/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/generate-from-images">> = Specific
+  const handler = {} as typeof import("../../app/api/generate-from-images/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 // Validate ../../app/api/generate-music/route.ts
 {
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/generate-music">> = Specific
   const handler = {} as typeof import("../../app/api/generate-music/route.js")
-  handler satisfies RouteHandlerConfig<"/api/generate-music">
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/run-python/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/run-python">> = Specific
+  const handler = {} as typeof import("../../app/api/run-python/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
 
 
@@ -71,6 +98,9 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 
 // Validate ../../app/layout.tsx
 {
+  type __IsExpected<Specific extends LayoutConfig<"/">> = Specific
   const handler = {} as typeof import("../../app/layout.js")
-  handler satisfies LayoutConfig<"/">
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
 }
