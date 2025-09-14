@@ -36,9 +36,14 @@ const FeelscapeStart: React.FC = () => {
       {/* Loading overlay */}
       {loading && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm z-40 animate-fadeIn">
-          <p className="text-white text-3xl font-light animate-pulse mb-4">
-            Loading...
-          </p>
+          <div className="relative w-16 h-16 mb-6">
+            {/* Dot 1 */}
+            <div className="absolute w-4 h-4 bg-blue-400 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit1" />
+            {/* Dot 2 */}
+            <div className="absolute w-4 h-4 bg-teal-400 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit2" />
+            {/* Dot 3 */}
+            <div className="absolute w-4 h-4 bg-indigo-400 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-orbit3" />
+          </div>
           <TypingText />
         </div>
       )}
@@ -113,9 +118,9 @@ const FeelscapeStart: React.FC = () => {
 
             {/* Dropdown menu */}
             <div
-              className={`flex flex-col items-center space-y-3 transition-all duration-500 ease-out origin-top-right ${
+              className={`flex flex-col items-center space-y-3 transition-transform transition-opacity duration-300 ease-out origin-top-right ${
                 menuOpen
-                  ? "opacity-100 scale-100 translate-y-0"
+                  ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
                   : "opacity-0 scale-95 -translate-y-4 pointer-events-none"
               }`}
             >
@@ -126,16 +131,9 @@ const FeelscapeStart: React.FC = () => {
               <MenuIcon icon={HelpCircle} label="Help" />
             </div>
           </div>
-
-          {/* Center placeholder content */}
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-black mb-2">Landscape Placeholder</h2>
-              <p className="text-black/70">EEG/biometric visualizations will appear here.</p>
-            </div>
-          </div>
         </div>
       )}
+
 
       {/* POPUP */}
       <MusicPopup visible={showMusicPopup} onClose={() => setShowMusicPopup(false)} />
@@ -143,6 +141,23 @@ const FeelscapeStart: React.FC = () => {
       <style
         dangerouslySetInnerHTML={{
           __html: `
+          @keyframes orbit1 {
+            0%   { transform: rotate(0deg) translateX(24px) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(24px) rotate(-360deg); }
+          }
+          @keyframes orbit2 {
+            0%   { transform: rotate(120deg) translateX(24px) rotate(-120deg); }
+            100% { transform: rotate(480deg) translateX(24px) rotate(-480deg); }
+          }
+          @keyframes orbit3 {
+            0%   { transform: rotate(240deg) translateX(24px) rotate(-240deg); }
+            100% { transform: rotate(600deg) translateX(24px) rotate(-600deg); }
+          }
+
+          .animate-orbit1 { animation: orbit1 1.5s linear infinite; }
+          .animate-orbit2 { animation: orbit2 1.5s linear infinite; }
+          .animate-orbit3 { animation: orbit3 1.5s linear infinite; }
+
           @keyframes float {
             0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.3; }
             25% { opacity: 0.7; }

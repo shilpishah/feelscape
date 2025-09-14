@@ -1,11 +1,4 @@
 {
-<<<<<<< HEAD
-  "/api/check-status/route": "app/api/check-status/route.js",
-  "/api/generate-music/route": "app/api/generate-music/route.js",
-=======
-  "/api/generate-music/route": "app/api/generate-music/route.js",
-  "/api/check-status/route": "app/api/check-status/route.js",
->>>>>>> bdbe921 (i did it. the end is near.)
   "/icon.ico/route": "app/icon.ico/route.js",
   "/page": "app/page.js"
 }

@@ -136,21 +136,23 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
       ref={popupRef}
       onMouseDown={startDrag}
       className="fixed z-[999] w-[380px] max-h-[80vh] flex flex-col rounded-3xl border border-white/20 
-                 backdrop-blur-2xl bg-white/10 bg-gradient-to-br from-white/20 via-white/10 to-pink-200/20 
-                 shadow-xl cursor-grab active:cursor-grabbing overflow-hidden"
+                backdrop-blur-2xl bg-white/10 bg-gradient-to-br from-white/20 via-white/10 to-pink-200/20 
+                shadow-xl cursor-grab active:cursor-grabbing overflow-hidden"
       style={{ top: "120px", left: "120px" }}
     >
       {/* Header */}
       <div className="flex justify-between items-center px-6 pt-4 pb-3 select-none">
         <div className="flex items-center gap-2">
-          <Music className="w-5 h-5 text-white drop-shadow" />
-          <h2 className="text-white font-bold text-lg tracking-wide">AI Music Generator</h2>
+          <Music className="w-5 h-5 text-white/90" />
+          <h2 className="text-white/90 font-bold text-lg tracking-wide drop-shadow-md">
+            Currently playing...
+          </h2>
         </div>
         <button
           onClick={(e) => { e.stopPropagation(); onClose(); }}
           className="p-1 rounded-full hover:bg-white/20 transition"
         >
-          <X className="w-5 h-5 text-white" />
+          <X className="w-5 h-5 text-white/80" />
         </button>
       </div>
 
@@ -161,14 +163,14 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           disabled={isGenerating}
-          className="resize-none min-h-[80px] text-base p-3 border border-white/30 rounded-lg"
+          className="resize-none min-h-[80px] text-base p-3 border border-white/30 rounded-lg text-white/90 placeholder-white/50"
         />
         <Textarea
           placeholder="Tags (optional)"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           disabled={isGenerating}
-          className="resize-none min-h-[40px] text-base p-3 border border-white/30 rounded-lg"
+          className="resize-none min-h-[40px] text-base p-3 border border-white/30 rounded-lg text-white/80 placeholder-white/40"
         />
         <Button onClick={handleGenerate} disabled={isGenerating || !prompt.trim()} className="w-full">
           {isGenerating ? "Generating..." : "Generate Song"}
@@ -177,14 +179,12 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
 
       {/* Generated Clips */}
       <div className="px-6 pb-4 flex flex-col gap-3 overflow-y-auto max-h-[250px]">
-        {error && <p className="text-red-400">{error}</p>}
+        {error && <p className="text-red-400 drop-shadow-md">{error}</p>}
         {generatedClips.map((clip) => (
           <Card key={clip.id} className="p-3 bg-white/10 border border-white/20 flex flex-col gap-2">
             <div className="flex justify-between">
-              <h3 className="text-white font-medium">{clip.title || "Untitled"}</h3>
-              <span className="text-xs text-white/50">
-                {clip.metadata.duration ? `${Math.round(clip.metadata.duration)}s` : ""}
-              </span>
+              <h3 className="text-white/90 font-medium drop-shadow-md">{clip.title || "Untitled"}</h3>
+              <span className="text-white/50 text-xs">{clip.metadata.duration ? `${Math.round(clip.metadata.duration)}s` : ""}</span>
             </div>
             {clip.audio_url && (
               <div className="relative h-2 bg-white/20 rounded-full mb-2 cursor-pointer">
@@ -196,10 +196,10 @@ const MusicPopup: React.FC<MusicPopupProps> = ({ visible, onClose }) => {
             )}
             <div className="flex gap-2">
               <Button onClick={() => togglePlayPause(clip)} className="flex-1">
-                {isPlaying[clip.id] ? <><Pause className="w-4 h-4 mr-1" />Pause</> : <><Play className="w-4 h-4 mr-1" />Play</>}
+                {isPlaying[clip.id] ? <><Pause className="w-4 h-4 mr-1 text-white/90" />Pause</> : <><Play className="w-4 h-4 mr-1 text-white/90" />Play</>}
               </Button>
               <Button onClick={() => handleDownload(clip)} className="flex-1" disabled={isDownloading[clip.id]}>
-                {isDownloading[clip.id] ? "Downloading..." : <><Download className="w-4 h-4 mr-1" />Download</>}
+                {isDownloading[clip.id] ? "Downloading..." : <><Download className="w-4 h-4 mr-1 text-white/90" />Download</>}
               </Button>
             </div>
           </Card>
