@@ -4,8 +4,14 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
+<<<<<<< HEAD
     "previewModeId": "5f3e7d89fb718c1f21d521fd77d71155",
     "previewModeSigningKey": "ed9cc2f44f5cc6c81cf28196268e0914cd29257f207e40cd6b620e0fdd166284",
     "previewModeEncryptionKey": "bf6c9ff4eb3caa7184862b0ab815a6e77d8842b96b5caba3af4fb1ad771a8694"
+=======
+    "previewModeId": "2745777afd5baa6c14988b6a3b7eedb3",
+    "previewModeSigningKey": "64f6d68a0010201a961a4bcfe951d00fca72c0c7565ccc95f180c8a23dfea4f5",
+    "previewModeEncryptionKey": "78fec414736f3874b07c0ba3b8890fc82d5a29b00c2a66d4179e1ad50108e83b"
+>>>>>>> bdbe921 (i did it. the end is near.)
   }
 }
